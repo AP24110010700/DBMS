@@ -1,4 +1,4 @@
-Friday# Flight Ticket Management System
+Flight Ticket Management System
 
 ## Description
 This project is a DBMS-based Flight Ticket Management System developed for managing passenger bookings, flights, tickets, and payments efficiently.
