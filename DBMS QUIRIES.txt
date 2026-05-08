@@ -1,0 +1,107 @@
+CREATE TABLE Passenger (
+    Passenger_ID INT PRIMARY KEY,
+    Name VARCHAR(50),
+    Age INT,
+    Phone VARCHAR(15)
+);
+
+CREATE TABLE Flight (
+    Flight_ID VARCHAR(10) PRIMARY KEY,
+    Source VARCHAR(50),
+    Destination VARCHAR(50),
+    Departure_Time VARCHAR(20)
+);
+
+CREATE TABLE Booking (
+    Booking_ID INT PRIMARY KEY,
+    Passenger_ID INT,
+    Flight_ID VARCHAR(10),
+    Booking_Date DATE,
+    FOREIGN KEY (Passenger_ID) REFERENCES Passenger(Passenger_ID),
+    FOREIGN KEY (Flight_ID) REFERENCES Flight(Flight_ID)
+);
+
+CREATE TABLE Ticket (
+    Ticket_ID INT PRIMARY KEY,
+    Booking_ID INT,
+    Seat_No VARCHAR(10),
+    Class VARCHAR(20),
+    FOREIGN KEY (Booking_ID) REFERENCES Booking(Booking_ID)
+);
+
+CREATE TABLE Payment (
+    Payment_ID INT PRIMARY KEY,
+    Booking_ID INT,
+    Amount DECIMAL(10,2),
+    Payment_Mode VARCHAR(20),
+    FOREIGN KEY (Booking_ID) REFERENCES Booking(Booking_ID)
+);
+
+
+INSERT INTO Passenger VALUES (1, 'Ravi', 25, '9876543210');
+INSERT INTO Passenger VALUES (2, 'Sita', 30, '9123456780');
+
+INSERT INTO Flight VALUES ('F101', 'Delhi', 'Mumbai', '10:00 AM');
+INSERT INTO Flight VALUES ('F102', 'Hyderabad', 'Chennai', '2:00 PM');
+
+INSERT INTO Booking VALUES (101, 1, 'F101', '2026-04-20');
+INSERT INTO Booking VALUES (102, 2, 'F102', '2026-04-21');
+
+INSERT INTO Ticket VALUES (201, 101, 'A1', 'Economy');
+INSERT INTO Ticket VALUES (202, 102, 'B2', 'Business');
+
+INSERT INTO Payment VALUES (301, 101, 5000, 'UPI');
+INSERT INTO Payment VALUES (302, 102, 8000, 'Card');
+
+SELECT * FROM Passenger;
+SELECT * FROM Flight;
+SELECT * FROM Booking;
+SELECT * FROM Ticket;
+SELECT * FROM Payment;
+
+
+SELECT P.Name, F.Source, F.Destination
+FROM Passenger P
+JOIN Booking B ON P.Passenger_ID = B.Passenger_ID
+JOIN Flight F ON B.Flight_ID = F.Flight_ID;
+
+SELECT COUNT(*) AS Total_Bookings FROM Booking;
+SELECT SUM(Amount) AS Total_Revenue FROM Payment;
+SELECT AVG(Amount) AS Average_Payment FROM Payment;
+
+SELECT Payment_Mode, COUNT(*) 
+FROM Payment
+GROUP BY Payment_Mode;
+
+
+SELECT * FROM Passenger ORDER BY Age DESC;
+
+SELECT Name 
+FROM Passenger 
+WHERE Passenger_ID IN (
+    SELECT Passenger_ID FROM Booking
+);
+
+
+UPDATE Passenger
+SET Phone = '9999999999'
+WHERE Passenger_ID = 1;
+
+
+DELETE FROM Ticket
+WHERE Ticket_ID = 202;
+
+
+CREATE VIEW Booking_Details AS
+SELECT P.Name, F.Source, F.Destination, B.Booking_Date
+FROM Passenger P
+JOIN Booking B ON P.Passenger_ID = B.Passenger_ID
+JOIN Flight F ON B.Flight_ID = F.Flight_ID;
+
+
+SELECT * FROM Booking_Details;
+
+
+
+
+
